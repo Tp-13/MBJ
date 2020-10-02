@@ -6,6 +6,7 @@ var database;
 var ideaTxt;
 var title;
 var greeting;
+var amountOfIdeas
 var ideaCounter = 0;
 var allSubmissions;
 
@@ -41,7 +42,14 @@ function setup(){
 function draw(){
     submitBTN.mousePressed(submitData);
     getDataBTN.mousePressed(getData);
+    getIdeaCount();
 }   
+
+function getIdeaCount(){
+    ideaCount = database.ref("ideaCounter").on("value",(data)=>{
+        ideaCounter= data.val();
+    })
+}
 
 function submitData(){
     ideaCounter++;
@@ -55,9 +63,13 @@ function submitData(){
         myName: name,
         myIdea: ideaTxt
     })
+    database.ref("/").update({
+        ideaCounter:ideaCounter
+    })
     greeting.html("Your idea has been submitted!");
     greeting.position(50,150)
 }
+
 
 function getData(){
     title.html("The Posts")
